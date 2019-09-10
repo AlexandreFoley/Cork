@@ -3,6 +3,8 @@ local myname, Cork = ...
 local UnitAura = Cork.UnitAura or UnitAura
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
 
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+if not WoWClassic then
 
 local ally = UnitFactionGroup('player') == "Alliance"
 local ids = ally and {64399, 64398, 63359} or {64402, 64401, 64400}
@@ -74,3 +76,4 @@ ae.RegisterEvent(dataobj, "PLAYER_UPDATE_RESTING", "Scan")
 ae.RegisterEvent(name, "UNIT_AURA", function(event, unit)
 	if unit == "player" then dataobj.custom = Test() end
 end)
+end

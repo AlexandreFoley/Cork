@@ -2,8 +2,13 @@
 local myname, Cork = ...
 local UnitAura = UnitAura
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 
 
+if not WoWClassic then
+	-- Those two spell do not exist in classic.
+	-- Not documented so i cannot test without playing on retail, but I bet this addon is completly broken on retail as well.
+	-- Deactiviate the module for now.
 local spellname, _, icon = GetSpellInfo(57139)
 local spellname2 = GetSpellInfo(44102)
 
@@ -136,3 +141,5 @@ frame:SetScript("OnShow", function()
 	frame:SetScript("OnShow", Update)
 	Update(frame)
 end)
+
+end

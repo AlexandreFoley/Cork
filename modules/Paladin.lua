@@ -3,6 +3,10 @@ local myname, Cork = ...
 if Cork.MYCLASS ~= "PALADIN" then return end
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
 
+
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+if not WoWClassic then
+
 -- Righteous Fury
 local spellname, _, icon = GetSpellInfo(25780)
 Cork:GenerateSelfBuffer(spellname, icon)
@@ -94,3 +98,9 @@ local spellname, _, icon = GetSpellInfo(53563)
 local dataobj = Cork:GenerateLastBuffedBuffer(spellname, icon)
 dataobj.partyonly = true
 dataobj.ignoreplayer = true
+
+else
+
+  print("HEY YOU! The paladin! This is cork and my class specific feature are deactivated for you on WOWclassic. Rather large modication must be made.")
+
+end

@@ -2,13 +2,14 @@
 local myname, Cork = ...
 if Cork.MYCLASS ~= "MAGE" then return end
 
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 
 -- Ice Barrier
 local spellname, _, icon = GetSpellInfo(11426)
 local dataobj = Cork:GenerateSelfBuffer(spellname, icon)
 dataobj.checkcooldown = true
 
-
+if not WoWClassic then
 -- Water Elemental (frost pet)
 local UnitAura = Cork.UnitAura or UnitAura
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
@@ -55,3 +56,4 @@ local dataobj = ldb:NewDataObject("Cork "..spellname, {
 
 ae.RegisterEvent(dataobj, "UNIT_PET")
 ae.RegisterEvent(dataobj, "PLAYER_UPDATE_RESTING", "Scan")
+end

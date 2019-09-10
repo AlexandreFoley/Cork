@@ -3,6 +3,8 @@ local myname, Cork = ...
 
 local IconLine = Cork.IconLine("Interface\\Icons\\INV_Box_PetCarrier_01", 'Minipet')
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+if not WoWClassic then
 
 Cork.defaultspc["Minipet-enabled"] = true
 
@@ -28,4 +30,6 @@ function dataobj:CorkIt(frame)
 		local macro = math.random(4) == 1 and '/randompet' or '/randomfavoritepet'
 		return frame:SetManyAttributes("type1", "macro", "macrotext1", macro)
 	end
+end
+
 end

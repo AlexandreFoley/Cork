@@ -1,5 +1,6 @@
 
 local myname, Cork = ...
+if (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC) then return end --disable tracking module for wowclassic. getTrackinginfo does not exist.
 local SpellCastableOnUnit, IconLine = Cork.SpellCastableOnUnit, Cork.IconLine
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
 

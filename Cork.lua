@@ -10,6 +10,11 @@ Cork.sortedcorks = {}
 
 local defaults = {point = "TOP", x = 0, y = -100, showanchor = true, debug = false, bindwheel = false}
 local tooltip, anchor
+Cork.WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+if WoWClassic then
+	SaveBindings = AttemptToSaveBindings
+end
 
 for i=1,MAX_BOSS_FRAMES do Cork.keyblist["boss"..i] = true end
 
@@ -35,17 +40,25 @@ ae.RegisterEvent("Cork", "ADDON_LOADED", function(event, addon)
 	ae.UnregisterEvent("Cork", "ADDON_LOADED")
 end)
 
+if WoWClassic then
+	function GetSpecialization()
+		return 1
+	end
+end
 
 local meta = {__index = Cork.defaultspc}
 ae.RegisterEvent("Cork", "PLAYER_LOGIN", function()
-	local lastspec = GetSpecialization()
-	Cork.dbpc = setmetatable(CorkDBPC[lastspec], meta)
+
 
 	for _,dataobj in pairs(Cork.sortedcorks) do if dataobj.Init then dataobj:Init() end end
 	for _,dataobj in pairs(Cork.sortedcorks) do dataobj:Scan() end
 
 	ae.RegisterEvent("Cork", "ZONE_CHANGED_NEW_AREA", Cork.Update)
-	ae.RegisterEvent("Cork", "PLAYER_TALENT_UPDATE", function()
+		local lastspec = GetSpecialization()
+		Cork.dbpc = setmetatable(CorkDBPC[lastspec], meta)
+		
+		if not WoWClassic then
+		ae.RegisterEvent("Cork", "PLAYER_TALENT_UPDATE", function()
 		if lastspec == GetSpecialization() then return end
 
 		lastspec = GetSpecialization()
@@ -56,7 +69,7 @@ ae.RegisterEvent("Cork", "PLAYER_LOGIN", function()
 		for name,dataobj in pairs(Cork.corks) do if dataobj.Init then dataobj:Init() end end
 		for name,dataobj in pairs(Cork.corks) do dataobj:Scan() end
 	end)
-
+	end
 	ae.UnregisterEvent("Cork", "PLAYER_LOGIN")
 end)
 
@@ -77,24 +90,27 @@ ae.RegisterEvent("Cork Core", "PLAYER_CONTROL_GAINED", function()
 	Cork.Update()
 end)
 
-ae.RegisterEvent("Cork Core", "UNIT_ENTERED_VEHICLE", function()
-	onTaxi = UnitHasVehicleUI('player')
-	Cork.Update()
-end)
-ae.RegisterEvent("Cork Core", "UNIT_EXITED_VEHICLE", function()
-	onTaxi = nil
-	Cork.Update()
-end)
+if not WoWClassic then 
+	ae.RegisterEvent("Cork Core", "UNIT_ENTERED_VEHICLE", function()
+		onTaxi = UnitHasVehicleUI('player')
+		Cork.Update()
+	end)
 
-ae.RegisterEvent("Cork Core", "PET_BATTLE_OPENING_START", function()
-	petBattle = true
-	Cork.Update()
-end)
-ae.RegisterEvent("Cork Core", "PET_BATTLE_OVER", function()
-	petBattle = nil
-	Cork.Update()
-end)
 
+	ae.RegisterEvent("Cork Core", "UNIT_EXITED_VEHICLE", function()
+		onTaxi = nil
+		Cork.Update()
+	end)
+
+	ae.RegisterEvent("Cork Core", "PET_BATTLE_OPENING_START", function()
+		petBattle = true
+		Cork.Update()
+	end)
+	ae.RegisterEvent("Cork Core", "PET_BATTLE_OVER", function()
+		petBattle = nil
+		Cork.Update()
+	end)
+end
 ------------------------------
 --      Tooltip anchor      --
 ------------------------------
@@ -316,7 +332,9 @@ local function FlushThresh()
 	last_thresh = nil
 	for name,dataobj in pairs(Cork.corks) do dataobj:Scan() end
 end
-ae.RegisterEvent("Cork Core", "PLAYER_DIFFICULTY_CHANGED", FlushThresh)
+if not WoWClassic then
+	ae.RegisterEvent("Cork Core", "PLAYER_DIFFICULTY_CHANGED", FlushThresh)
+end
 ae.RegisterEvent("Cork Core", "UPDATE_INSTANCE_INFO", FlushThresh)
 -- ae.RegisterEvent("Cork Core", "GUILD_PARTY_STATE_UPDATED", FlushThresh)
 -- ae.RegisterEvent("Cork Core", "PLAYER_GUILD_UPDATE", FlushThresh)

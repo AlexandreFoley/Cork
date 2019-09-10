@@ -2,6 +2,8 @@
 local myname, ns = ...
 local ae = LibStub("AceEvent-3.0")
 
+local WoWClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+if not WoWClassic then
 
 local maxlevel = GetMaxPlayerLevel()
 local itemname = "Darkmoon EXP Buff"
@@ -30,3 +32,4 @@ end
 ae.RegisterEvent(dataobj, "CALENDAR_UPDATE_EVENT_LIST", "Scan")
 dataobj.tiplink = "spell:46668"
 dataobj.CorkIt = nil
+end
