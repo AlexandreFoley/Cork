@@ -3,10 +3,21 @@ local myname, Cork = ...
 local UnitAura = Cork.UnitAura or UnitAura
 local ldb, ae = LibStub:GetLibrary("LibDataBroker-1.1"), LibStub("AceEvent-3.0")
 
-
 local function HasBuff(spells)
-	for _,spell in pairs(spells) do
-		if UnitAura("player", spell) then return true end
+	if Cork.WoWClassic then
+		for _,spell in pairs(spells) do
+			local Abuff = "takesomeroom"
+			local index = 1
+			while Abuff and index <=40 do
+				Abuff = UnitAura("player",index,"PLAYER")
+				if Abuff == spell then return true end
+				index = index + 1
+			end
+		end
+	else
+		for _,spell in pairs(spells) do
+			if UnitAura("player", spell) then return true end
+		end
 	end
 end
 
@@ -47,11 +58,16 @@ local function UNIT_AURA(self, event, unit)
 end
 
 
-function Cork:GenerateSelfBuffer(spellname, icon, ...)
+function Cork:GenerateSelfBuffer(spellname, icon, spellid, ...)
+	if not spellid then 
+		spellid = GetSpellLink(spellname)
+	else
+		spellid = "spell:"..spellid
+	end
 	local dataobj = ldb:NewDataObject("Cork "..spellname, {
 		type      = "cork",
 		corktype  = "buff",
-		tiplink   = GetSpellLink(spellname),
+		tiplink   = spellid,
 		iconline  = self.IconLine(icon, spellname),
 		spells    = {spellname, ...},
 		spellname = spellname,
