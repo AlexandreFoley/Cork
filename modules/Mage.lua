@@ -12,11 +12,11 @@ if Cork.WoWClassic then
 	dataobj.checkcooldown = true
 
 	-- Frost Armor
-	local spellname, _, icon, _, _, _, spellid = GetSpellInfo("Frost Armor")
+	local spellname, _, icon, _, _, _, spellid = GetSpellInfo(7300)
 	local dataobj = Cork:GenerateSelfBuffer(spellname, icon, spellid)
 
-	-- Arcane Intellect
-	local spellname, _, icon, _, _, _, spellid = GetSpellInfo("Arcane Intellect")
+	-- Arcane Intellect --will replace with raid buffer.
+	local spellname, _, icon, _, _, _, spellid = GetSpellInfo(1460)
 	local dataobj = Cork:GenerateSelfBuffer(spellname, icon, spellid)
 
 else
